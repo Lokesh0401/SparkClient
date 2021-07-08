@@ -23,7 +23,8 @@ public class BaseAction {
   static final PartitionSpec SPEC = PartitionSpec.builderFor(SCHEMA)
     .bucket("id", 16)
     .build();
-
+  static final String tableDir = "/Users/saurabhagarwal/Desktop/Repositories/iceberg-generator/generated-tables";
+  private static SparkSession sparkSession = null;
   final DataFile FILE_0 = DataFiles.builder(SPEC)
     .withPartitionPath("id_bucket=0")
     .withPath(new File(tableDir, "data-0.parquet").toString())
@@ -48,15 +49,20 @@ public class BaseAction {
     .withFileSizeInBytes(400)
     .withRecordCount(1000)
     .build();
-
-  static final String tableDir = "/Users/saurabhagarwal/Desktop/Repositories/iceberg-generator/generated-tables/iceberg-table-23-17-32.004";
-  private static SparkSession sparkSession = null;
   Table table;
 
   @BeforeClass
   public static void startSpark() {
     sparkSession = SparkSession.builder()
-      .master("local[2]")
+//      .config("spark.sql.catalog.local", "org.apache.iceberg.spark.SparkCatalog")
+//      .config("spark.sql.catalog.local.type", "hadoop")
+//    .config("spark.sql.catalog.local.warehouse", "data/warehouse")
+      // TODO[Saurabh]: Always tries to load HiveCatalog irrespective of what you put
+//      .config("spark.sql.catalog.spark_catalog", "org.apache.iceberg.spark.SparkCatalog")
+//      .config("spark.sql.catalog.spark_catalog.type", "hadoop")
+//      .config("spark.sql.catalog.spark_catalog.warehouse", tableDir)
+//      .enableHiveSupport()
+      .master("local[2]") // spark://172.25.2.201:7077 to connect to remote cluster
       .getOrCreate();
   }
 

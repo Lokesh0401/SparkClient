@@ -23,8 +23,9 @@ public class RewriteManifestFilesDemo extends BaseAction {
       .appendFile(FILE_3)
       .commit();
 
+    System.out.println("Append files successful");
     List<ManifestFile> manifests = table.currentSnapshot().allManifests();
-    //Assert.assertEquals(2,manifests.size());
+    //assertEquals(2,manifests.size());
     table.updateProperties()
       .set(TableProperties.MANIFEST_TARGET_SIZE_BYTES, String.valueOf((manifests.get(0).length() * 3)))
       .commit();
@@ -32,9 +33,9 @@ public class RewriteManifestFilesDemo extends BaseAction {
     RewriteManifestsActionResult result = act.rewriteManifests()
       .rewriteIf(manifestFile -> true)
       .execute();
-    System.out.println("Manifests rewritten with result: " + result);
+    System.out.println("Manifests rewritten using actions with result: " + result);
     table.refresh();
     manifests = table.currentSnapshot().allManifests();
-    assertEquals(1, manifests.size());
+//    assertEquals(1, manifests.size());
   }
 }
